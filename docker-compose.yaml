@@ -1,0 +1,46 @@
+version: '3'
+services:
+  mongo-app:
+    build: .
+    image: 'mongo-app:1.0.1'
+    container_name: 'mongo-app'
+    depends_on:
+      - 'mongo-dbs'
+    restart: always
+    networks:
+      - 'mongo-net'
+    ports:
+      - '3000:3000'
+  mongo-dbs:
+    image: 'mongo:5.0.10'
+    container_name: 'mongo-dbs'
+    environment:
+      - 'MONGO_INITDB_ROOT_USERNAME=admin'
+      - 'MONGO_INITDB_ROOT_PASSWORD=password'
+    networks:
+      - 'mongo-net'
+    ports:
+      - '27017:27017'
+    volumes:
+      - 'mongo-dbs-data:/data/db'
+  mongo-exp:
+    image: 'mongo-express:1.0.0-alpha.4'
+    container_name: 'mongo-exp'
+    restart: 'always'
+    depends_on:
+      - 'mongo-dbs'
+    environment:
+      - 'ME_CONFIG_MONGODB_ADMINUSERNAME=admin'
+      - 'ME_CONFIG_MONGODB_ADMINPASSWORD=password'
+      - 'ME_CONFIG_MONGODB_SERVER=mongo-dbs'
+    networks:
+      - 'mongo-net'
+    ports:
+      - '8081:8081'
+networks:
+  mongo-net:
+    driver: bridge
+    name: mongo-net
+volumes:
+  mongo-dbs-data:
+    driver: local

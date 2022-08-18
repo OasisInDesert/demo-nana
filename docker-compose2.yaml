@@ -1,0 +1,63 @@
+name: demo-nana
+services:
+  mongo-app:
+    build:
+      context: /home/nurezi/demo-nana
+      dockerfile: Dockerfile
+    container_name: mongo-app
+    depends_on:
+      mongo-dbs:
+        condition: service_started
+    image: mongo-app:1.0.1
+    networks:
+      mongo-net: null
+    ports:
+    - mode: ingress
+      target: 3000
+      published: "3000"
+      protocol: tcp
+    restart: always
+  mongo-dbs:
+    container_name: mongo-dbs
+    environment:
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_ROOT_USERNAME: admin
+    image: mongo:5.0.10
+    networks:
+      mongo-net: null
+    ports:
+    - mode: ingress
+      target: 27017
+      published: "27017"
+      protocol: tcp
+    volumes:
+    - type: volume
+      source: mongo-dbs-data
+      target: /data/db
+      volume: {}
+  mongo-exp:
+    container_name: mongo-exp
+    depends_on:
+      mongo-dbs:
+        condition: service_started
+    environment:
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    image: mongo-express:1.0.0-alpha.4
+    networks:
+      mongo-net: null
+    ports:
+    - mode: ingress
+      target: 8081
+      published: "8081"
+      protocol: tcp
+    restart: always
+networks:
+  mongo-net:
+    name: mongo-net
+    driver: bridge
+volumes:
+  mongo-dbs-data:
+    name: demo-nana_mongo-dbs-data
+    driver: local
