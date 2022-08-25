@@ -53,7 +53,7 @@ echo
 #  fi
 
 echo 'starting  mongo-app container'
-docker run -d -p 3000:3000 --name mongo-app --network mongo-net mongo-app
+docker run -d -p 3000:3000 --name mongo-app --network mongo-net mongo-app:latest
 echo
 
 echo 'completed!'
