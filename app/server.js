@@ -20,6 +20,12 @@ app.get('/profile-picture', function (req, res) {
   res.end(img, 'binary');
 });
 
+app.get('/favicon.ico', function (req, res) {
+  let img = fs.readFileSync(path.join(__dirname, "images/favicon.ico"));
+  res.writeHead(200, {'Content-Type': 'image/ico' });
+  res.end(img, 'binary');
+});
+
 // use when starting application locally
 // let mongoUrlLocal = "mongodb://admin:password@localhost:27017";
 
