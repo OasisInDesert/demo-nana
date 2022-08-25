@@ -14,7 +14,6 @@ pipeline {
     }
     stage ('cleanup') {
       steps {
-        sh 'pwd && ls -lh'
         sh './mongo-stop.sh' 
       }
     }
