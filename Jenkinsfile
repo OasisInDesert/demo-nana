@@ -1,8 +1,9 @@
 pipeline {
   agent any
   stages {
-    stage ('verify tooling') {
+    stage ('checkup') {
       steps {
+        echo 'Checking up the environment...'
         sh '''
           docker version
           docker info
@@ -19,26 +20,28 @@ pipeline {
     }
     stage('build') {
        steps {
-        echo 'building the app...'
+        echo 'Building the app...'
         sh 'docker compose up -d --no-color --wait'
         sh 'docker compose ps'       
       }
     }
     stage('test') {
        steps {
-        echo 'testing the app...'
+        echo 'Testing the app...'
         sh 'curl http://mongo-app:3000/'
       }
     }
     stage('deploy') {
       steps {
-        echo 'deploying the app...'
+        echo 'Deploying the app...'
       }
     }
   }
   post {
-    // failure {}
-    cleanup {sh 'docker compose down'}
+    cleanup {
+      echo 'Cleaning up ...'
+      sh 'docker compose down'
+    }
   }
   
 }
