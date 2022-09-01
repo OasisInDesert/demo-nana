@@ -12,8 +12,8 @@ COPY ./app /home/app
 # -- set default dir so that next commands executes in /home/app dir
 WORKDIR /home/app
 #
-# -- install dependencies - optional - already downloaded and copied
-# RUN npm install
+# -- install dependencies
+RUN npm install
 #
 # -- expose ports 
 EXPOSE 3000
