@@ -3,7 +3,6 @@ services:
   mongo-app:
     build: .
     image: "mongo-app:1.0.1"
-    image: "mongo-app:latest"
     container_name: 'mongo-app'
     depends_on:
       - 'mongo-dbs'
