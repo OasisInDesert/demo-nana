@@ -31,10 +31,14 @@ pipeline {
       }
     }
     stage('deploy') {
-    
       steps {
         echo 'deploying the app...'
       }
     }
   }
+  post {
+    // failure {}
+    cleanup {sh 'docker compose down'}
+  }
+  
 }
