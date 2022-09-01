@@ -24,13 +24,13 @@ pipeline {
         sh 'docker compose up -d --no-color --wait'
         sh 'docker compose ps'
         echo 'waiting for mongo-app..'
-        sh 'sleep 4s'
+        sh 'sleep 2s'
       }
     }
     stage('test') {
        steps {
         echo 'Testing the app...'
-        sh 'curl http://mongo-app:3000/'
+        sh 'curl -m 6 http://mongo-app:3000/'
       }
     }
     stage('deploy') {
@@ -42,7 +42,7 @@ pipeline {
   post {
     cleanup {
       echo 'Cleaning up ...'
-      sh 'docker compose down'
+      // sh 'docker compose down'
     }
   }
   
