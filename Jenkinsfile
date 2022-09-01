@@ -22,7 +22,9 @@ pipeline {
        steps {
         echo 'Building the app...'
         sh 'docker compose up -d --no-color --wait'
-        sh 'docker compose ps'       
+        sh 'docker compose ps'
+        echo 'waiting for mongo-app..'
+        sh 'sleep 4s'
       }
     }
     stage('test') {
