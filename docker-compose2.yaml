@@ -1,63 +1,45 @@
-name: demo-nana
+version: '3'
 services:
   mongo-app:
-    build:
-      context: /home/nurezi/demo-nana
-      dockerfile: Dockerfile
+    image: "mongo-app:1.0.1"
     container_name: mongo-app
     depends_on:
-      mongo-dbs:
-        condition: service_started
-    image: mongo-app:1.0.1
-    networks:
-      mongo-net: null
-    ports:
-    - mode: ingress
-      target: 3000
-      published: "3000"
-      protocol: tcp
+      - 'mongo-dbs'
     restart: always
+    networks:
+      - 'mongo-net'
+    ports:
+      - '3000:3000'
   mongo-dbs:
+    image: mongo:5.0.10
     container_name: mongo-dbs
     environment:
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_ROOT_USERNAME: admin
-    image: mongo:5.0.10
+      - 'MONGO_INITDB_ROOT_USERNAME=admin'
+      - 'MONGO_INITDB_ROOT_PASSWORD=password'
     networks:
-      mongo-net: null
+      - 'mongo-net'
     ports:
-    - mode: ingress
-      target: 27017
-      published: "27017"
-      protocol: tcp
+      - '27017:27017'
     volumes:
-    - type: volume
-      source: mongo-dbs-data
-      target: /data/db
-      volume: {}
+      - 'mongo-dbs-data:/data/db'
   mongo-exp:
-    container_name: mongo-exp
+    image: 'mongo-express:1.0.0-alpha.4'
+    container_name: 'mongo-exp'
+    restart: 'always'
     depends_on:
-      mongo-dbs:
-        condition: service_started
+      - 'mongo-dbs'
     environment:
-      ME_CONFIG_MONGODB_ADMINPASSWORD: password
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_SERVER: mongodb
-    image: mongo-express:1.0.0-alpha.4
+      - 'ME_CONFIG_MONGODB_ADMINUSERNAME=admin'
+      - 'ME_CONFIG_MONGODB_ADMINPASSWORD=password'
+      - 'ME_CONFIG_MONGODB_SERVER=mongo-dbs'
     networks:
-      mongo-net: null
+      - 'mongo-net'
     ports:
-    - mode: ingress
-      target: 8081
-      published: "8081"
-      protocol: tcp
-    restart: always
+      - '8081:8081'
 networks:
   mongo-net:
-    name: mongo-net
     driver: bridge
+    name: mongo-net
 volumes:
   mongo-dbs-data:
-    name: demo-nana_mongo-dbs-data
     driver: local
