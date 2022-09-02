@@ -11,10 +11,13 @@ COPY ./app /home/app
 #
 # -- set default dir so that next commands executes in /home/app dir
 WORKDIR /home/app
-#
+
 # -- install dependencies
-RUN npm install
 #
+# -- disabled due to cached modules, enable if you wish to download fresh on build
+# RUN npm install
+
+
 # -- expose ports 
 EXPOSE 3000
 #
