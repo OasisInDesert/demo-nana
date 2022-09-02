@@ -1,5 +1,7 @@
-node_modules
 
-.DS_Store
+# == omit nodejs modules
+#
+# node_modules
 
-.idea/*
+
+
